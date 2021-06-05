@@ -5,9 +5,18 @@ import UserInfo from './components/UserInfo';
 import GitStats from './components/GitStats';
 import GitSocial from './components/GitSocial';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+import styled from 'styled-components';
+import { faCheckSquare, faCoffee, faEnvelope } from '@fortawesome/free-solid-svg-icons'
 
+library.add(fab, faCheckSquare, faCoffee, faEnvelope)
 
+const CardDiv = styled.div`
+  border: solid 1px black;
+  width: 50%;
+  margin: auto;
+`;
 
 class App extends React.Component {
   constructor() {
@@ -21,7 +30,7 @@ class App extends React.Component {
     axios.get('https://api.github.com/users/Rex-1031')
       .then(res =>
         
-        {console.log(res);
+        {console.log(res.data);
           this.setState({
             ...this.state,
             name: res.data.name,
@@ -37,9 +46,8 @@ class App extends React.Component {
             following: res.data.following,
             stars: res.data.stars,
             twitter: res.data.twitter_username,
-            site: res.data.blog
-
-            
+            site: res.data.blog,
+            started: res.data.created_at
           }) 
       })
       .catch(err =>{console.log(err)})
@@ -51,9 +59,11 @@ class App extends React.Component {
   render() { 
     const user= this.state;
     return ( 
-      <div>
-          <UserInfo 
+      <div className="App">
+        <h1>GitHub User</h1>
 
+        <CardDiv>
+          <UserInfo 
             name = {user.name}
             img = {user.userImage}
             login ={user.login}
@@ -62,24 +72,25 @@ class App extends React.Component {
             location ={user.location}
             hireable = {user.hireable}
             bio = {user.bio}
+            started = {user.started}
           />
          
 
           
             <GitStats 
               repos= {user.repos}
+              followers ={user.followers}
+              following ={user.following}
+              stars={user.stars}
             />
           
 
          
             <GitSocial 
-              followers ={user.followers}
-              following ={user.following}
-              stars={user.stars}
               twitter ={user.twitter}
               site ={user.blog}
             />
-         
+         </CardDiv>
         
 </div>
        
